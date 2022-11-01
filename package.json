@@ -1,5 +1,5 @@
 {
-  "name": "dc_system",
+  "name": "dc_system_web",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
