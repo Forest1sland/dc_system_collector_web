@@ -1,7 +1,7 @@
 <!-- 试管内人员列表 -->
 <template>
     <h1 id="title">人员列表</h1>
-    <h3>当前试管:{{list.length}}</h3>
+    <h3>当前试管:{{store.tubeId}}</h3>
     <h3>人数</h3>
     <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <van-cell v-for="item in list" :key="item" :title="item" />

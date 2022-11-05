@@ -9,6 +9,8 @@ import tube from '../components/tube.vue'
 import person from '../components/person.vue'
 import profile from '../components/profile.vue'
 import view from '../views/view.vue'
+import useStore from '../stores/store'
+
 
 const router = createRouter({
     // history: createWebHistory(import.meta.env.BASE_URL),
@@ -65,7 +67,14 @@ const router = createRouter({
 })
 
 
-// router.beforeEach({
-
-// })
+router.beforeEach((to, from) => {
+    const store = useStore()
+    if (to.name == 'register')
+        return true
+    if (
+        !store.collectorId && to.path !== '/'
+    ) {
+        return { path: '/' }
+    }
+})
 export default router

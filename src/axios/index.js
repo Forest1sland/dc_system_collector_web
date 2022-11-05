@@ -4,6 +4,7 @@ import { Toast } from 'vant';
 
 var CODE = comm.RESULT_CODE
 
+
 const instance = axios.create({
     baseURL: '/api',
 });
@@ -20,14 +21,14 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
     console.log(response.data.code)
     switch (response.data.code) {
-        case 301:
+        case CODE.LOGIN_FAILED:
             Toast.fail('登录失败');
             break;
-        case 200:
-            Toast.success('登录成功');
+        case CODE.SUCCESS:
+            Toast.success('成功');
             break;
-        case 300: break;
-        case 400: break;
+        case CODE.LOGIN_TIME_OUT: break;
+        case CODE.BUSINESS_ERROR: break;
     }
 
     return response.data;

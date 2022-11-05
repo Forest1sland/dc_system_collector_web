@@ -36,6 +36,7 @@
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from '../axios'
+import useStore from '../stores/store';
 /**
  * 登录功能
  * @Param Person person
@@ -47,6 +48,10 @@ const people = reactive({
     }
 })
 
+/**
+ * 点击提交发送登录请求并跳转页面
+ */ 
+const store = useStore()
 const onSubmit = (values) => {
     people.data = values
     axios({
@@ -54,13 +59,17 @@ const onSubmit = (values) => {
         url: '/collector/login.do',
         data: people.data
     }).then(res => {
-        if (res)
+        if (res.code == 200) {
+            store.collectorId = res.object.collectorId
             router.push({ name: 'choicePoint' })
+        }
+
+
     })
 };
 
 
-
+//进入注册页面
 const router = useRouter()
 const toRegister = () => {
     router.push('register')

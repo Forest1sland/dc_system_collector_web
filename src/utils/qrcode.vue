@@ -1,16 +1,8 @@
 <template>
     <div class="scan">
         <div class="video-container">
-            <video class="video" id="video-1"></video>
+            <video class="video" id="video-1" v-if="isVisible"></video>
         </div>
-        <!-- <div class="camera-container" v-if="videoInputDevices.length">
-            <label>摄像头：</label>
-            <select v-model="currentVideoInputDevice">
-                <option v-for="(videoInputDevice, index) in videoInputDevices" :key="index" :value="videoInputDevice">
-                    {{ videoInputDevice.label }}
-                </option>
-            </select>
-        </div> -->
     </div>
 </template>
 
@@ -30,6 +22,7 @@ const codeReader = reactive(new BrowserMultiFormatReader())
 const videoInputDevices = ref([])
 const currentVideoInputDevice = ref({})
 const decodeResult = ref('')
+const isVisible = ref(false)
 
 const openScan = async () => {
     //获取输入设备
@@ -42,6 +35,7 @@ const openScan = async () => {
                 } //防止先唤出前摄像头
                 videoInputDevices.value = Devices;
                 currentVideoInputDevice.value = videoInputDevices[0];
+                isVisible.value = true
             }
         })
         .catch(() => { });
@@ -81,7 +75,7 @@ const successDecode = () => {
     // Notify({ type: 'primary', message: decodeResult.value.text });
     console.log(route.query.toPage)
     switch (route.query.toPage) {
-        case 'tube': store.caseId = decodeResult.value.text
+        case 'tube': store.boxId = decodeResult.value.text
             break;
         case 'profile': store.personId = decodeResult.value.text
             break;
@@ -120,7 +114,7 @@ onUnmounted(() => {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    
+
 }
 
 

@@ -5,11 +5,11 @@ const useStore = defineStore('store', () => {
   const collectorId = ref('')
   const pointId = ref('')
   const personId = ref('')
-  const caseId = ref('')
+  const boxId = ref('')
   const tubeId = ref('')
 
 
-  return { caseId, tubeId, personId, pointId, collectorId }
+  return { boxId: boxId, tubeId, personId, pointId, collectorId }
 })
 
 export default useStore
