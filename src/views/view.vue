@@ -1,11 +1,11 @@
 <template>
+
+    <Head></Head>
     <RouterView />
 </template>
 
 <script setup>
-
-import Head from './components/head.vue'
-
+import Head from '../components/head.vue'
 </script>
 
 <script >
