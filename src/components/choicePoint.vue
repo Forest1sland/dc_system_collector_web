@@ -51,6 +51,5 @@ const toCase = (id) => {
 <style lang="scss" scoped>
 #title {
     margin: 6vh auto 6vh 6%;
-
 }
 </style>

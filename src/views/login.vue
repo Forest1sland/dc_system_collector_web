@@ -111,7 +111,7 @@ const toRegister = () => {
 }
 
 .input {
-    margin: 40px 0px;
+    margin: 10px 0px;
     border-radius: 2000px;
     height: 8vh;
 
@@ -127,6 +127,7 @@ const toRegister = () => {
     width: 10vh;
     display: inline-block;
     border: 0;
+    margin-top: 40px;
 
     @keyframes gradientBG {
         0% {
