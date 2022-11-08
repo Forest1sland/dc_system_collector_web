@@ -55,15 +55,13 @@ const onSubmit = (values) => {
     }
     axios({
         method: 'post',
-        url: '/collector/register.do',
+        url: '/collector/registerCollector.do',
         data: register.data
 
     }).then(res => {
         if (res.code == 200) {
-            Toast.success('注册成功');
             router.back()
         }
-
     })
 };
 
@@ -101,6 +99,8 @@ const checkData = (data) => {
 #body {
     height: 100vh;
     position: relative;
+    background-color: #F7F8FA;
+
 }
 
 .van-cell {

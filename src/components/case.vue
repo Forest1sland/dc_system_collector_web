@@ -1,16 +1,26 @@
 <template>
     <div id="body">
-        <h1 id="title">转运箱</h1>
-        <div id="bottom">
-            <van-button @click="openCase" round type="success" style="width: 20%;">开箱</van-button>
-            <van-button @click="toCaseList" round type="success" style="width: 20%;">列表</van-button>
-        </div>
+        <h1 id="title">{{ store.collectorName }},欢迎您</h1>
+        <van-cell-group inset class="cell">
+            <van-cell title="开箱" size="large" label="请扫描箱码" value=">" @click="openCase" />
+        </van-cell-group>
+
+        <van-cell-group inset class="cell">
+            <van-cell title="列表" size="large" label="查看转运箱列表" value=">" @click="toCaseList" />
+        </van-cell-group>
     </div>
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'
+import useStore from '../stores/store'
 const router = useRouter()
+const store = useStore()
+
+onMounted(() => {
+    store.resetBox()
+})
 
 //开箱扫码
 const openCase = () => {
@@ -22,8 +32,11 @@ const openCase = () => {
     })
 }
 
+//跳转到转运箱列表
 const toCaseList = () => {
-
+    router.push({
+        name: 'caseList'
+    })
 }
 </script>
 
@@ -31,18 +44,19 @@ const toCaseList = () => {
 
 <style lang="scss" scoped>
 #title {
-    margin: 6vh auto 6vh 6%;
+    padding: 6vh;
+    margin: 0;
 }
 
-#bottom {
-    display: flex;
-    position: fixed;
-    bottom: 10vh;
-    width: 100%;
-    justify-content: space-around;
-}
+
 
 #body {
-    height: 90vh;
+    height: 100vh;
+    background-color: #F7F8FA;
+
+}
+
+.cell {
+    margin: 3vh;
 }
 </style>

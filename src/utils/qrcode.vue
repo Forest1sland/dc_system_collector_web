@@ -16,8 +16,12 @@ import { onMounted, onUnmounted, reactive, watch, ref } from "vue";
 import { Notify } from 'vant';
 import { useRoute, useRouter } from "vue-router";
 import useStore from "../stores/store";
-
-//扫描二维码
+import axios from "../axios";
+/**
+ * codeReader 获取识别二维码对象
+ * videoInputDevices 摄像头设备列表
+ * currentVideoInputDevice 当前摄像头设备
+ */
 const codeReader = reactive(new BrowserMultiFormatReader())
 const videoInputDevices = ref([])
 const currentVideoInputDevice = ref({})
@@ -32,7 +36,7 @@ const openScan = async () => {
             if (Devices && Devices.length) {
                 if (Devices.length > 1) {
                     Devices.reverse();
-                } //防止先唤出前摄像头
+                }
                 videoInputDevices.value = Devices;
                 currentVideoInputDevice.value = videoInputDevices[0];
                 isVisible.value = true
@@ -45,11 +49,12 @@ const openScan = async () => {
 const decodeFromInputVideo = () => {
 
     codeReader.reset();
-    // 多次
+    // 探测二维码并识别
     codeReader.decodeFromVideoDevice(
         currentVideoInputDevice.deviceId,
         "video-1",
         (result, err) => {
+            //识别到二维码
             if (result) {
                 decodeResult.value = result;
             }
@@ -67,24 +72,48 @@ const decodeFromInputVideo = () => {
     );
 }
 
-
+/**
+ * 识别成功跳转页面
+ */
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
 const successDecode = () => {
-    // Notify({ type: 'primary', message: decodeResult.value.text });
     console.log(route.query.toPage)
     switch (route.query.toPage) {
-        case 'tube': store.boxId = decodeResult.value.text
+        case 'tube':
+            //将扫描的转运箱加入到box表中
+            axios({
+                method: 'post',
+                url: '/box/insertBox.do',
+                data: {
+                    boxCode: decodeResult.value.text
+                }
+            }).then(res => {
+                if (res.code == 200) {
+                    store.boxId = res.object
+                }
+            })
             break;
-        case 'profile': store.personId = decodeResult.value.text
+        case 'profile':
+            //通过扫描的人员id查询
+            store.peopleId = decodeResult.value.text
             break;
-        case 'person': store.tubeId = decodeResult.value.text
+        case 'person':
+            axios({
+                url: '/testTube/insertTestTube.do',
+                data: {
+                    testTubeCode: decodeResult.value.text,
+                    collectType: store.collectType
+                }
+            }).then(res => {
+                console.log(res)
+                store.testTubeId = res.object
+            })
             break;
     }
     router.replace({
         name: route.query.toPage,
-
     })
 
 }
@@ -93,7 +122,10 @@ watch(currentVideoInputDevice, async (o, n) => {
     decodeFromInputVideo()
 })
 
+//监听获取结果
 watch(decodeResult, async (o, n) => {
+    Notify({ type: 'primary', message: '识别成功！' });
+
     successDecode();
 })
 

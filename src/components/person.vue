@@ -1,78 +1,136 @@
 <!-- 试管内人员列表 -->
 <template>
-    <h1 id="title">人员列表</h1>
-    <h3>当前试管:{{store.tubeId}}</h3>
-    <h3>人数</h3>
-    <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-cell v-for="item in list" :key="item" :title="item" />
-    </van-list>
-    <div id="bottom">
 
-        <van-button @click="toPerson" type="success" round style="width: 20%;">身份码</van-button>
-        <van-button @click="sealTube" type="success" round style="width: 20%;">封管</van-button>
+    <div id="body">
+
+        <div id="title">
+            <h1>人员列表</h1>
+            <h3>当前试管:{{ store.testTubeId }}</h3>
+            <h3>人数:{{ list.length }}/{{ count }}</h3>
+        </div>
+        <div id="list">
+            <van-list @load="onLoad">
+                <van-swipe-cell v-for="(item, index) in list" :key="index" :title="item.people.name"
+                    :value="item.people.idCard">
+                    <van-cell :key="index" :title="item.people.name" :value="item.people.idCard" />
+                    <template #right>
+                        <van-button square type="danger" text="删除" @click="deleteOne(item.people.peopleId)" />
+                    </template>
+                </van-swipe-cell>
+            </van-list>
+        </div>
+
+        <div id="bottom">
+            <van-button @click="toPerson" type="success" round style="width: 20%;">身份码</van-button>
+            <van-button @click="sealTube" type="success" round style="width: 20%;">封管</van-button>
+        </div>
     </div>
-
 </template>
 
 <script setup>
 import { Dialog } from 'vant';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import useStore from '../stores/store';
+import axios from '../axios';
 
-
+/**
+ * 点击身份码，进入扫码页面
+ * 判断是否是满管
+ */
 const router = useRouter()
 const toPerson = () => {
+    if (list.length == count) {
+        Toast.fail('当前试管已满，请封管！')
+    }
     router.push({
         name: 'qrcode',
         query: {
             toPage: 'profile',
-            type: '',
         }
     })
 }
 
 
-//获取数据列表
+
+/**
+ * 获取该试管下人员列表
+ * 通过id查询数据返回试管列表
+ */
 const list = ref([])
-const loading = ref(false);
-const finished = ref(false);
-
+const count = ref('')
 const onLoad = () => {
-    // 异步更新数据
-    // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    setTimeout(() => {
-        for (let i = 0; i < 50; i++) {
-            list.value.push(list.value.length + 1);
-        }
+    if (store.testTubeId != '') {
+        setTimeout(() => {
+            axios({
+                url: '/sample/selectInfoUnderSample.do',
+                data: {
+                    testTubeId: store.testTubeId,
+                }
+            }).then(res => {
+                list.value = res.object
+            })
+            axios({
+                url: '/testTube/selectTestTube.do',
+                data: {
+                    testTubeId: store.testTubeId,
+                }
+            }).then(res => {
+                count.value = res.object[0].collectType
+            })
+        }, 300)
+    }
 
-        // 加载状态结束
-        loading.value = false;
-
-        // 数据全部加载完成
-        if (list.value.length >= 10) {
-            finished.value = true;
-        }
-    }, 1000);
 };
 
 
+/**
+ * 初始化页面，添加试管，通过code添加，返回id
+ */
+
+
+/**
+ * 点击封管
+ * 改变试管状态
+ * 返回上级页面
+ */
 const store = useStore()
 const sealTube = () => {
     Dialog.confirm({
         title: '是否封管',
-        // message:
-        //     '如果解决方法是丑陋的，那就肯定还有更好的解决方法，只是还没有发现而已。',
-    })
-        .then(() => {
-            // on confirm
-            store.tubeId = ''
-            router.back()
-
+    }).then(() => {
+        // on confirm
+        axios({
+            url: '/testtube/updateTestTube.do',
+            data: {
+                testTubeId: store.testTubeId
+            }
         })
-        .catch(() => {
-            // on cancel
-        });
+        store.tubeId = ''
+        router.back()
+
+    }).catch(() => {
+        // on cancel
+    });
+}
+
+
+/**
+ * 点击删除按钮
+ * 删除样本表中的用户
+ * @param {*} id 
+ */
+const deleteOne = id => {
+    Dialog.confirm({
+        title: '确定删除吗？',
+    }).then(() => {
+        axios({
+            url: '/sample/deleteOneByPeopleId',
+            data: {
+                peopleId: id
+            }
+        })
+    });
 }
 
 </script>
@@ -81,8 +139,21 @@ const sealTube = () => {
 
 <style lang="scss" scoped>
 #title {
-    margin: 6vh auto 6vh 6%;
+    padding: 6vh;
+    margin: 0;
+}
 
+
+#body {
+    height: 100vh;
+    position: relative;
+    background-color: #F7F8FA;
+
+}
+
+#list {
+    width: 100%;
+    margin: 0 auto;
 }
 
 #bottom {

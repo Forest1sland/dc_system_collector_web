@@ -1,10 +1,16 @@
 <template>
-    <div>
-        <h1 id="title">选择采集点</h1>
+    <div class="body">
+        <div id="title">
+            <h1>选择采集点</h1>
+        </div>
+
 
         <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="(item, index) in list.data" :key="index" :title="item.pointname"
-                @click="toCase(item.pointid)" />
+
+            <van-cell-group inset>
+                <van-cell v-for="(item, index) in list.data" :key="index" :title="item.pointname"
+                    @click="toCase(item.pointid)" size="large" />
+            </van-cell-group>
         </van-list>
 
     </div>
@@ -29,7 +35,6 @@ const onLoad = () => {
         method: 'post',
         url: '/point/getAllPoints'
     }).then(res => {
-
         list.data = res
         console.log(list)
         loading.value = false;
@@ -42,7 +47,9 @@ const store = useStore()
 const router = useRouter()
 const toCase = (id) => {
     store.pointId = id
-    router.push({ name: 'case' })
+    router.push({
+        name: 'case'
+    })
 }
 
 
@@ -50,6 +57,18 @@ const toCase = (id) => {
 
 <style lang="scss" scoped>
 #title {
-    margin: 6vh auto 6vh 6%;
+
+    margin: 0;
+}
+
+#title h1 {
+    padding: 6vh;
+    margin: 0;
+    display: block;
+}
+
+.body {
+    background-color: #F7F8FA;
+    height: 100vh;
 }
 </style>

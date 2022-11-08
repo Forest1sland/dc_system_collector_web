@@ -7,6 +7,7 @@ var CODE = comm.RESULT_CODE
 
 const instance = axios.create({
     baseURL: '/api',
+    method:'post',
 });
 
 // 添加请求拦截器
@@ -22,13 +23,17 @@ instance.interceptors.response.use(function (response) {
     console.log(response.data.code)
     switch (response.data.code) {
         case CODE.LOGIN_FAILED:
-            Toast.fail('登录失败');
+            Toast.fail(response.data.message);
             break;
         case CODE.SUCCESS:
-            Toast.success('成功');
+            
             break;
-        case CODE.LOGIN_TIME_OUT: break;
-        case CODE.BUSINESS_ERROR: break;
+        case CODE.LOGIN_TIME_OUT:
+            Toast.fail(response.data.message);
+            break;
+        case CODE.BUSINESS_ERROR:
+            Toast.fail(response.data.message);
+            break;
     }
 
     return response.data;

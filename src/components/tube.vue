@@ -4,8 +4,11 @@
         <h1 id="title">试管列表</h1>
         <h3>当前转运箱:{{ store.boxId }}</h3>
         <h3>试管数量:{{ list.length }}</h3>
-        <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <van-cell v-for="item in list" :key="item" :title="item" />
+        <van-list @load="onLoad">
+            <van-cell-group inset>
+                <van-cell v-for="(item, index) in list" :title="item.testTubeId" :value="item.collectType"
+                    :key="index" />
+            </van-cell-group>
         </van-list>
 
         <div id="bottom">
@@ -19,23 +22,25 @@
 
 <script setup>
 import axios from '../axios';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Dialog } from 'vant';
+import { Dialog, Toast } from 'vant';
 import useStore from '../stores/store';
+
+
 const router = useRouter()
 
 const store = useStore()
-//扫完转运箱码会将码号存进store中，调用
-//获取箱中的试管
-//开管 封箱按钮 悬浮
-//开管类型 已添加的试管数量
-//查询箱中试管数量
 
 
+onMounted(() => {
+
+})
 
 
-//开管
+/**
+ * 开管
+ */
 const toPerson = () => {
     router.push({
         name: 'choiceTubeType'
@@ -43,44 +48,23 @@ const toPerson = () => {
 }
 
 
-
-//获取数据列表
+//获取箱中的试管
 const list = ref([])
-const loading = ref(false);
-const finished = ref(false);
-
 const onLoad = () => {
-    // 异步更新数据
-    // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    axios({
-        method: 'get',
-        url: '/tube/getTubesByBoxId',
-        params: {
-            boxId : store.boxId
-        }
-    })
-
-    // 加载状态结束
-    loading.value = false;
-
-    // 数据全部加载完成
-    if (list.value.length >= 10) {
-        finished.value = true;
+    if (store.boxId != '') {
+        axios({
+            url: '/testTube/selectTestTube.do',
+            data: {
+                boxId: store.boxId
+            }
+        }).then(res => {
+            console.log(res)
+            list.value = res.object
+        })
     }
-
-
-
-    //请求后端获取列表
-    // axios({
-    //     method: 'get',
-    //     url: '',
-    //     params: {
-    //         caseId:''
-    //     },
-    // }).then(res=>{})
 };
 
-
+//点击封箱 清空箱号
 const sealCase = () => {
     Dialog.confirm({
         title: '是否封箱',
@@ -100,13 +84,23 @@ const sealCase = () => {
 
 <style lang="scss" scoped>
 #body {
-    height: 90vh;
+    height: 100vh;
+    position: relative;
+    background-color: #F7F8FA;
+
+}
+
+h3 {
+    padding-left: 3vh;
+
 }
 
 #title {
-    margin: 6vh auto 6vh 6%;
-
+    padding: 6vh;
+    margin: 0;
 }
+
+
 
 #bottom {
     display: flex;

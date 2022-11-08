@@ -1,7 +1,7 @@
 <template>
     <div id="body">
         <div id="title_div">
-            <h1 id="title">核酸采集平台</h1>
+            <h1 id="title">核酸检测采集平台</h1>
         </div>
 
         <div id="login">
@@ -37,6 +37,9 @@ import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from '../axios'
 import useStore from '../stores/store';
+import { Toast } from 'vant';
+
+
 /**
  * 登录功能
  * @Param Person person
@@ -50,22 +53,28 @@ const people = reactive({
 
 /**
  * 点击提交发送登录请求并跳转页面
- */ 
+ */
 const store = useStore()
 const onSubmit = (values) => {
     people.data = values
-    axios({
-        method: 'post',
-        url: '/collector/login.do',
-        data: people.data
-    }).then(res => {
-        if (res.code == 200) {
-            store.collectorId = res.object.collectorId
-            router.push({ name: 'choicePoint' })
-        }
-
-
-    })
+    console.log(people.data)
+    if (!people.data.tel != '' || people.data.password != '')
+        axios({
+            method: 'post',
+            url: '/collector/loginCollector.do',
+            data: people.data
+        }).then(res => {
+            if (res.code == 200) {
+                store.collectorId = res.object[0].collectorId
+                store.collectorName = res.object[0].name
+                Toast.success(res.message);
+                router.push({
+                    name: 'choicePoint'
+                })
+            }
+        })
+    else
+        Toast.fail('请输入账号密码')
 };
 
 
@@ -82,6 +91,7 @@ const toRegister = () => {
     height: 100vh;
     width: 100%;
     position: relative;
+    background-color: #F7F8FA;
 }
 
 #title {

@@ -3,13 +3,29 @@ import { defineStore } from 'pinia'
 
 const useStore = defineStore('store', () => {
   const collectorId = ref('')
+  const collectorName = ref('')
   const pointId = ref('')
-  const personId = ref('')
+  const boxCode = ref('')
   const boxId = ref('')
-  const tubeId = ref('')
+  const testTubeId = ref('')
+  const testTubeCode = ref('')
+  const testTubeType = ref('')
+  const peopleId = ref('')
 
 
-  return { boxId: boxId, tubeId, personId, pointId, collectorId }
+  const resetBox = () => {
+    boxId.value = ''
+    boxCode.value = ''
+  }
+
+  const resetTestTube = () => {
+    testTubeId.value = ''
+    testTubeCode.value = ''
+  }
+  const resetPeople = () => {
+    peopleId.value = ''
+  }
+  return { boxId, boxCode, testTubeId, testTubeCode, collectType: testTubeType, peopleId, pointId, collectorId, collectorName, resetBox, resetPeople, resetTestTube }
 })
 
 export default useStore

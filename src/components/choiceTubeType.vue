@@ -1,8 +1,31 @@
 <template>
-    <div>
+    <div class="body">
         <h1 id="title">
             选择采集类型
         </h1>
+        <div id="choice">
+
+
+            <van-radio-group v-model="collectType" icon-size="30px">
+                <van-cell-group inset>
+                    <van-cell title="十人混采" clickable @click="collectType = '10'">
+                        <template #right-icon>
+                            <van-radio name="10" />
+                        </template>
+                    </van-cell>
+                    <van-cell title="五人混采" clickable @click="collectType = '5'">
+                        <template #right-icon>
+                            <van-radio name="5" />
+                        </template>
+                    </van-cell>
+                    <van-cell title="单采" clickable @click="collectType = '1'">
+                        <template #right-icon>
+                            <van-radio name="1" />
+                        </template>
+                    </van-cell>
+                </van-cell-group>
+            </van-radio-group>
+        </div>
         <div id="bottom">
             <van-button id="button" @click="toPerson">
                 <svg t="1667640621636" class="icon" viewBox="0 0 1040 1024" version="1.1"
@@ -30,29 +53,47 @@
 </template>
 
 <script setup>
+import { Toast } from 'vant';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import useStore from '../stores/store'
 
-
+const store = useStore()
 const router = useRouter()
 const toPerson = () => {
-    router.replace({
-        name: 'qrcode',
-        query: {
-            toPage: 'person'
-        }
-    })
+    if (collectType.value != '') {
+        store.collectType = collectType
+        router.replace({
+            name: 'qrcode',
+            query: {
+                toPage: 'person'
+            }
+        })
+    }
+    else
+        Toast.fail('请选择类型')
+
 }
 
-</script>
+const collectType = ref('')
 
-<script >
+
 
 </script>
 
 <style lang="scss" scoped>
-#title {
-    margin: 6vh auto 6vh 6%;
+.body {
+    height: 100vh;
+    background-color: #F7F8FA;
+}
 
+#title {
+    padding: 6vh;
+    margin: 0;
+}
+
+.van-cell {
+    font-size: 20px;
 }
 
 #bottom {

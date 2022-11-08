@@ -4,7 +4,6 @@
 
 <script setup>
 
-import Head from './components/head.vue'
 
 </script>
 
