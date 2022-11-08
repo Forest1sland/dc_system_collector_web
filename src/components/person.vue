@@ -33,22 +33,23 @@ import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import useStore from '../stores/store';
 import axios from '../axios';
-
+import { Toast } from 'vant';
 /**
  * 点击身份码，进入扫码页面
  * 判断是否是满管
  */
 const router = useRouter()
 const toPerson = () => {
-    if (list.length == count) {
+    if (list.value.length >= count.value) {
         Toast.fail('当前试管已满，请封管！')
-    }
-    router.push({
-        name: 'qrcode',
-        query: {
-            toPage: 'profile',
-        }
-    })
+
+    } else
+        router.push({
+            name: 'qrcode',
+            query: {
+                toPage: 'profile',
+            }
+        })
 }
 
 
@@ -127,8 +128,11 @@ const deleteOne = id => {
         axios({
             url: '/sample/deleteOneByPeopleId',
             data: {
-                peopleId: id
+                peopleId: id,
+                testTubeId: store.testTubeId
             }
+        }).then(res => {
+            Toast.success('删除成功！')
         })
     });
 }

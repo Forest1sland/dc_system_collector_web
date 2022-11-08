@@ -104,7 +104,8 @@ const successDecode = () => {
                 url: '/testTube/insertTestTube.do',
                 data: {
                     testTubeCode: decodeResult.value.text,
-                    collectType: store.collectType
+                    collectType: store.collectType,
+                    boxId: store.boxId
                 }
             }).then(res => {
                 console.log(res)
