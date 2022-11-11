@@ -7,13 +7,19 @@
 </template>
 
 <script setup>
+/**
+ * 当query为tube时，发送请求将转运箱添加到转运箱表
+ * 传递boxCode，collectorId返回boxId存入store中，
+ * 当query为person时，发送请求将试管添加到试管表中
+ * 当query为profile时，将peopleId存入store中
+ */
 import {
     BrowserMultiFormatReader,
     ChecksumException,
     FormatException,
 } from "@zxing/library";
 import { onMounted, onUnmounted, reactive, watch, ref } from "vue";
-import { Notify } from 'vant';
+import { Notify, Tab, Toast } from 'vant';
 import { useRoute, useRouter } from "vue-router";
 import useStore from "../stores/store";
 import axios from "../axios";
@@ -84,18 +90,22 @@ const successDecode = () => {
         case 'tube':
             /**
              * 将扫描的转运箱加入到box表中
-             * @Param boxCode
+             * @Param boxCode collectorId
              * @Return boxId
              */
             axios({
                 method: 'post',
                 url: '/box/insertBox.do',
                 data: {
-                    boxCode: decodeResult.value.text
+                    boxCode: decodeResult.value.text,
+                    collectorId: store.collectorId
                 }
             }).then(res => {
                 if (res.code == 200) {
                     store.boxId = res.object
+                } else {
+                    Toast.fail(res.message)
+                    router.back()
                 }
             })
             break;
@@ -118,8 +128,14 @@ const successDecode = () => {
                     boxId: store.boxId
                 }
             }).then(res => {
-                console.log(res)
-                store.testTubeId = res.object
+                if (res.code == 200) {
+                    console.log(res)
+                    store.testTubeId = res.object
+                } else {
+                    Toast.fail(res.message)
+                    router.back()
+
+                }
             })
             break;
     }

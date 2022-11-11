@@ -79,6 +79,7 @@ const sealCase = () => {
                 status: 1 //已封箱
             }
         }).then(res => {
+            Toast.success(res.message)
             store.boxId = ''
             store.tubeId = ''
             router.back()

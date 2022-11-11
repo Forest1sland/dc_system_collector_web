@@ -66,8 +66,9 @@ const toPerson = () => {
 const list = ref([])
 const count = ref('')
 const onLoad = () => {
-    if (store.testTubeId != '') {
-        setTimeout(() => {
+
+    setTimeout(() => {
+        if (store.testTubeId != '') {
             axios({
                 url: '/sample/selectInfoUnderSample.do',
                 data: {
@@ -86,9 +87,8 @@ const onLoad = () => {
             }).then(res => {
                 count.value = res.object[0].collectType
             })
-        }, 300)
-    }
-
+        }
+    }, 800)
 };
 
 
@@ -104,10 +104,13 @@ const sealTube = () => {
     }).then(() => {
         // on confirm
         axios({
-            url: '/testtube/updateTestTube.do',
+            url: '/testTube/updateTestTube.do',
             data: {
-                testTubeId: store.testTubeId
+                testTubeId: store.testTubeId,
+                status: 1
             }
+        }).then(res => {
+            Toast.success(res.message)
         })
         store.tubeId = ''
         router.back()

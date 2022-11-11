@@ -62,9 +62,11 @@ const onSubmit = () => {
             testTubeId: store.testTubeId
         }
     }).then(res => {
-        Toast.fail(res.message)
         if (res.code == 200) {
+            Toast.success(res.message)
             router.back();
+        } else {
+            Toast.fail(res.message)
         }
     })
 }

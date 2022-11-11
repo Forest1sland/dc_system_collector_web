@@ -16,7 +16,7 @@
  * 显示姓名
  * 点击开箱按钮跳转到扫码页面，传递扫完码跳转的页面作为query
  * 点击列表按钮跳转到查看转运箱列表页面。
- * 
+ * 清空store中关于箱管人的数据
  */
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'
