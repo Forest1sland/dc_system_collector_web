@@ -7,7 +7,7 @@ var CODE = comm.RESULT_CODE
 
 const instance = axios.create({
     baseURL: '/api',
-    method:'post',
+    method: 'post',
 });
 
 // 添加请求拦截器
@@ -26,7 +26,7 @@ instance.interceptors.response.use(function (response) {
             Toast.fail(response.data.message);
             break;
         case CODE.SUCCESS:
-            
+
             break;
         case CODE.LOGIN_TIME_OUT:
             Toast.fail(response.data.message);
@@ -38,7 +38,7 @@ instance.interceptors.response.use(function (response) {
 
     return response.data;
 }, function (error) {
-
+    Toast.fail('无法连接网络！')
     return Promise.reject(error);
 });
 

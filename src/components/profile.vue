@@ -24,6 +24,7 @@
 </template>
 
 <script setup>
+import { Toast } from 'vant';
 import { onUnmounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axios from '../axios';
@@ -40,7 +41,7 @@ const people = reactive({
 
 setTimeout(() => {
     axios({
-        url: '/people/getPeopleById',
+        url: '/people/getOnePeople.do',
         data: {
             peopleId: store.peopleId,
         }
@@ -60,11 +61,11 @@ const onSubmit = () => {
             peopleId: store.peopleId,
             testTubeId: store.testTubeId
         }
-
     }).then(res => {
-        store.personId = ''
-        router.back();
-
+        Toast.fail(res.message)
+        if (res.code == 200) {
+            router.back();
+        }
     })
 }
 </script>
@@ -84,14 +85,14 @@ const onSubmit = () => {
     height: 100vh;
     position: relative;
     background-color: #F7F8FA;
-    
+
 
 }
 
 #button {
     position: fixed;
     bottom: 3vh;
-    margin:0 5%;
+    margin: 0 5%;
     width: 90%;
 }
 </style>

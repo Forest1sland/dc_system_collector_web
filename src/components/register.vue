@@ -104,7 +104,7 @@ const checkData = (data) => {
 }
 
 .van-cell {
-    background-color: #f5f5f5;
+
 }
 
 #title {

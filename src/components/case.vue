@@ -12,6 +12,12 @@
 </template>
 
 <script setup>
+/**
+ * 显示姓名
+ * 点击开箱按钮跳转到扫码页面，传递扫完码跳转的页面作为query
+ * 点击列表按钮跳转到查看转运箱列表页面。
+ * 
+ */
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import useStore from '../stores/store'

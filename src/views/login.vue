@@ -33,6 +33,12 @@
 </template>
 
 <script setup>
+/**
+ * 通过手机号和密码登录
+ * 当输入框为空时提示
+ * 当密码错误时提示
+ * 登录成功时弹出登录成功，保存collectorId和collectorName并跳转到选择采集点页面
+ */
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from '../axios'
@@ -58,7 +64,7 @@ const store = useStore()
 const onSubmit = (values) => {
     people.data = values
     console.log(people.data)
-    if (!people.data.tel != '' || people.data.password != '')
+    if (people.data.tel != '' || people.data.password != '')
         axios({
             method: 'post',
             url: '/collector/loginCollector.do',

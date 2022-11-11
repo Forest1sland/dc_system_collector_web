@@ -16,16 +16,20 @@ const useStore = defineStore('store', () => {
   const resetBox = () => {
     boxId.value = ''
     boxCode.value = ''
+    resetPeople()
+    resetTestTube()
   }
 
   const resetTestTube = () => {
     testTubeId.value = ''
     testTubeCode.value = ''
+    testTubeType.value  = ''
+    resetPeople()
   }
   const resetPeople = () => {
     peopleId.value = ''
   }
-  return { boxId, boxCode, testTubeId, testTubeCode, collectType: testTubeType, peopleId, pointId, collectorId, collectorName, resetBox, resetPeople, resetTestTube }
+  return { boxId, boxCode, testTubeId, testTubeCode, testTubeType, peopleId, pointId, collectorId, collectorName, resetBox, resetPeople, resetTestTube }
 })
 
 export default useStore

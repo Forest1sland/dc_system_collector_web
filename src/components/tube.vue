@@ -34,7 +34,7 @@ const store = useStore()
 
 
 onMounted(() => {
-
+    store.resetTestTube()
 })
 
 
@@ -64,18 +64,26 @@ const onLoad = () => {
     }
 };
 
-//点击封箱 清空箱号
+/**
+ * 点击封箱 清空箱号 发送更改箱子状态请求
+ */
 const sealCase = () => {
     Dialog.confirm({
         title: '是否封箱',
 
-    })
-        .then(() => {
+    }).then(() => {
+        axios({
+            url: '/box/updateBox.do',
+            data: {
+                boxId: store.boxId,
+                status: 1 //已封箱
+            }
+        }).then(res => {
             store.boxId = ''
             store.tubeId = ''
             router.back()
-
         })
+    })
         .catch(() => { });
 }
 </script>

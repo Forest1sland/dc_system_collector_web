@@ -34,6 +34,10 @@ import { onMounted, ref } from 'vue';
 import useStore from '../stores/store';
 import axios from '../axios';
 import { Toast } from 'vant';
+
+onMounted(() => {
+    store.resetPeople()
+})
 /**
  * 点击身份码，进入扫码页面
  * 判断是否是满管
@@ -57,6 +61,7 @@ const toPerson = () => {
 /**
  * 获取该试管下人员列表
  * 通过id查询数据返回试管列表
+ * 通过id查询采集类型返回最大人数
  */
 const list = ref([])
 const count = ref('')
@@ -69,7 +74,9 @@ const onLoad = () => {
                     testTubeId: store.testTubeId,
                 }
             }).then(res => {
-                list.value = res.object
+                if (res.object != null) {
+                    list.value = res.object
+                }
             })
             axios({
                 url: '/testTube/selectTestTube.do',
@@ -83,11 +90,6 @@ const onLoad = () => {
     }
 
 };
-
-
-/**
- * 初始化页面，添加试管，通过code添加，返回id
- */
 
 
 /**
@@ -133,6 +135,7 @@ const deleteOne = id => {
             }
         }).then(res => {
             Toast.success('删除成功！')
+            onLoad()
         })
     });
 }

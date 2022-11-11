@@ -82,7 +82,11 @@ const successDecode = () => {
     console.log(route.query.toPage)
     switch (route.query.toPage) {
         case 'tube':
-            //将扫描的转运箱加入到box表中
+            /**
+             * 将扫描的转运箱加入到box表中
+             * @Param boxCode
+             * @Return boxId
+             */
             axios({
                 method: 'post',
                 url: '/box/insertBox.do',
@@ -100,6 +104,12 @@ const successDecode = () => {
             store.peopleId = decodeResult.value.text
             break;
         case 'person':
+            /**
+             * 扫描试管码添加试管
+             * @Param testTubeCode collectType boxId
+             * @Return 试管id
+             */
+
             axios({
                 url: '/testTube/insertTestTube.do',
                 data: {

@@ -18,7 +18,10 @@
 </template>
 
 <script setup>
-
+/**
+ * 获取采集点列表
+ * 点击某一采集点跳转到case页面
+ */
 import axios from '../axios';
 import useStore from '../stores/store'
 import { reactive, ref } from 'vue'
