@@ -100,18 +100,46 @@ const successDecode = () => {
                     boxCode: decodeResult.value.text,
                     collectorId: store.collectorId
                 }
-            }).then(res => {
-                if (res.code == 200) {
-                    store.boxId = res.object
+            }).then(res1 => {
+                if (res1.code == 200) {
+                    store.boxId = res1.object
+                    router.replace({
+                        name: route.query.toPage,
+                    })
                 } else {
-                    Toast.fail(res.message)
-                    router.back()
+                    if (res1.message == '该转运箱已存在') {
+                        store.boxId = res1.object
+                        console.log(res1)
+                        axios({
+                            url: '/box/getBox.do',
+                            data: {
+                                boxId: res1.object
+                            }
+                        }).then(res2 => {
+                            if (res2.object[0].status == 0) {
+                                Toast.success('该转运箱未封箱，可继续添加试管')
+                                router.replace({
+                                    name: route.query.toPage,
+                                })
+                            } else {
+                                Toast.fail('该转运箱已封箱，请重新扫描')
+                                router.back()
+                            }
+                        })
+                    } else {
+                        Toast.fail(res1.message)
+                        router.back()
+                    }
+
                 }
             })
             break;
         case 'profile':
             //通过扫描的人员id查询
             store.peopleId = decodeResult.value.text
+            router.replace({
+                name: route.query.toPage,
+            })
             break;
         case 'person':
             /**
@@ -127,22 +155,41 @@ const successDecode = () => {
                     collectType: store.collectType,
                     boxId: store.boxId
                 }
-            }).then(res => {
-                if (res.code == 200) {
-                    console.log(res)
-                    store.testTubeId = res.object
+            }).then(res1 => {
+                if (res1.code == 200) {
+                    console.log(res1)
+                    store.testTubeId = res1.object
+                    router.replace({
+                        name: route.query.toPage,
+                    })
                 } else {
-                    Toast.fail(res.message)
-                    router.back()
+                    if (res1.message == '该试管已存在') {
+                        store.testTubeId = res1.object
+                        axios({
+                            url: '/testTube/selectTestTube.do',
+                            data: {
+                                testTubeId: store.testTubeId
+                            }
+                        }).then(res2 => {
+                            if (res2.object[0].status == 0) {
+                                Toast.success('该试管未封管，可继续添加信息')
+                                router.replace({
+                                    name: route.query.toPage,
+                                })
+                            } else {
+                                Toast.fail('该试管已封管，请重新扫描')
+                                router.back()
+                            }
+                        })
+                    } else {
+                        Toast.fail(res1.message)
+                        router.back()
+                    }
 
                 }
             })
             break;
     }
-    router.replace({
-        name: route.query.toPage,
-    })
-
 }
 
 watch(currentVideoInputDevice, async (o, n) => {
@@ -175,8 +222,6 @@ onUnmounted(() => {
     box-sizing: border-box;
 
 }
-
-
 
 .scan {
     display: flex;

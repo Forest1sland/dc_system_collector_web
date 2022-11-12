@@ -54,10 +54,8 @@ const onSubmit = (values) => {
         return
     }
     axios({
-        method: 'post',
         url: '/collector/registerCollector.do',
         data: register.data
-
     }).then(res => {
         if (res.code == 200) {
             router.back()

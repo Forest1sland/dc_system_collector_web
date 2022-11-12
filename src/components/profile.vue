@@ -5,22 +5,14 @@
             <h2>请核对个人信息</h2>
         </div>
         <div>
-
-
             <van-cell-group inset>
                 <van-cell title="姓名" :value="people.name">{{ people.data.name }}</van-cell>
                 <van-cell title="证件号" :value="people.idCard">{{ people.data.idCard }}</van-cell>
                 <van-cell title="手机号" :value="people.tel">{{ people.data.tel }}</van-cell>
-
             </van-cell-group>
-
             <van-button type="primary" @click="onSubmit" block id="button">确认信息</van-button>
-
-
         </div>
     </div>
-
-
 </template>
 
 <script setup>
@@ -35,7 +27,6 @@ const store = useStore()
 
 const people = reactive({
     data: {
-
     }
 })
 
@@ -46,8 +37,14 @@ setTimeout(() => {
             peopleId: store.peopleId,
         }
     }).then(res => {
-        people.data = res.object
-        console.log(people.data)
+        if (res.code == 200) {
+            people.data = res.object
+            console.log(people.data)
+        } else {
+            Toast.fail('该用户不存在')
+            router.back()
+        }
+
     })
 }, 300)
 
@@ -67,6 +64,7 @@ const onSubmit = () => {
             router.back();
         } else {
             Toast.fail(res.message)
+
         }
     })
 }

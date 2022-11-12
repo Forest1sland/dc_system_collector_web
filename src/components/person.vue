@@ -30,11 +30,12 @@
 <script setup>
 import { Dialog } from 'vant';
 import { useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import useStore from '../stores/store';
 import axios from '../axios';
 import { Toast } from 'vant';
 
+const store = useStore()
 onMounted(() => {
     store.resetPeople()
 })
@@ -88,16 +89,15 @@ const onLoad = () => {
                 count.value = res.object[0].collectType
             })
         }
-    }, 800)
+    }, 300)
 };
-
 
 /**
  * 点击封管
  * 改变试管状态
  * 返回上级页面
  */
-const store = useStore()
+
 const sealTube = () => {
     Dialog.confirm({
         title: '是否封管',

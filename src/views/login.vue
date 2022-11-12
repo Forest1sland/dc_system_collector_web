@@ -6,13 +6,11 @@
 
         <div id="login">
             <van-form @submit="onSubmit">
-                <!-- <van-cell-group inset label-width="50px"> -->
-                <!-- type="tel"  -->
                 <van-field class="input" v-model="people.tel" name="tel" placeholder="请输入手机号" label-width="5em"
                     style="font-size: 20px;" :center=true input-align="center" />
                 <van-field class="input" v-model="people.password" type="password" name="password" placeholder="请输入密码"
                     style="font-size: 20px;" :center="true" input-align="center" label-width="5em" />
-                <!-- </van-cell-group> -->
+            
                 <div id="login_div">
                     <van-button round block type="success" native-type="submit" id="login_btn">
                         <svg t="1667615474530" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -64,7 +62,7 @@ const store = useStore()
 const onSubmit = (values) => {
     people.data = values
     console.log(people.data)
-    if (people.data.tel != '' || people.data.password != '')
+    if (people.data.tel != '' && people.data.password != '')
         axios({
             method: 'post',
             url: '/collector/loginCollector.do',
@@ -80,7 +78,7 @@ const onSubmit = (values) => {
             }
         })
     else
-        Toast.fail('请输入账号密码')
+        Toast.fail('请输入手机号和密码')
 };
 
 
