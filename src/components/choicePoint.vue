@@ -5,8 +5,8 @@
         </div>
         <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
             <van-cell-group inset>
-                <van-cell v-for="(item, index) in list.data" :key="index" :title="item.pointname"
-                    @click="toCase(item.pointid)" size="large" />
+                <van-cell v-for="(item, index) in list.data" :key="index" :title="item.pointName"
+                    @click="toCase(item.pointId)" size="large" />
             </van-cell-group>
         </van-list>
     </div>
