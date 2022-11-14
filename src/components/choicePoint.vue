@@ -34,7 +34,6 @@ const onLoad = () => {
         url: '/point/getAllPoints'
     }).then(res => {
         list.data = res
-        console.log(list)
         loading.value = false;
         finished.value = true;
     })

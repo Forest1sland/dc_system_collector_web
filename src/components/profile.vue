@@ -39,7 +39,6 @@ setTimeout(() => {
     }).then(res => {
         if (res.code == 200) {
             people.data = res.object
-            console.log(people.data)
         } else {
             Toast.fail('该用户不存在')
             router.back()

@@ -61,7 +61,6 @@ const people = reactive({
 const store = useStore()
 const onSubmit = (values) => {
     people.data = values
-    console.log(people.data)
     if (people.data.tel != '' && people.data.password != '')
         axios({
             method: 'post',

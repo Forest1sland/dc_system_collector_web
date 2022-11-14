@@ -58,7 +58,6 @@ const onLoad = () => {
                 boxId: store.boxId
             }
         }).then(res => {
-            console.log(res)
             list.value = res.object
         })
     }

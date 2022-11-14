@@ -30,9 +30,7 @@ const onLoad = () => {
 
         }
     }).then(res => {
-
         list.data = res.object
-        console.log(list)
         loading.value = false;
         finished.value = true;
     })
